@@ -6,8 +6,6 @@ draft: false
 
 # Manuale Utente e Manutenzione: Hugo + PaperMod + Decap CMS Self-Hosted
 ...
-
-
 Questo documento riassume l'architettura, la configurazione e i flussi di lavoro del tuo sito web statico, completo di pannello di amministrazione (CMS) e deploy automatico.
 
 ## 1. Architettura del Sistema
@@ -17,7 +15,7 @@ Il sistema è composto da quattro componenti principali che lavorano insieme:
 1.  **Hugo + Tema PaperMod**: Il generatore di siti statici. Prende i file Markdown e li trasforma in HTML/CSS/JS pronti per il web.
 2.  **Nginx**: Il web server. Serve i file statici generati da Hugo e fa da "Reverse Proxy" per le chiamate di autenticazione e per i webhook.
 3.  **Decap CMS + Proxy OAuth (Docker)**: Il pannello di amministrazione web (`/admin/`). Permette di scrivere articoli dal browser. Il container Docker `decap-oauth` gestisce in modo sicuro il login tramite GitHub.
-4.  **GitHub Webhook + Servizio Locale**: Il sistema di deploy automatico. Quando pubblichi un articolo, GitHub avvisa il tuo server, che scarica le modifiche e rigenera il sito in automatico.
+4.  **GitHub Webhook + Servizio Locale**: Il sistema di deploy automatico. Quando pubblichi un articolo, GitHub avvisa il tuo server, che scarica le modifiche (tramite autenticazione SSH, senza chiedere password) e rigenera il sito in automatico.
 
 ---
 
@@ -42,7 +40,7 @@ Dimentica il terminale per la scrittura quotidiana. Tutto si fa dal browser.
 ## 3. Struttura delle Directory del Server
 
 *   `/opt/web/mysite/` -> La cartella principale del progetto Hugo.
-*   `/opt/web/mysite/content/` -> Qui risiedono i file `.md` dei tuoi articoli.
+*   `/opt/web/mysite/content/` -> Qui risiedono i file `.md` dei tuoi articoli e pagine.
 *   `/opt/web/mysite/static/` -> File statici (es. immagini, il pannello `admin/`).
 *   `/opt/web/mysite/public/` -> La cartella generata da Hugo con il sito pronto. **Nginx serve questa cartella**.
 *   `/opt/web/mysite/hugo.toml` -> Il file di configurazione del sito (titolo, URL, ecc.).
@@ -75,6 +73,8 @@ Se pubblichi un articolo ma il sito non cambia, potrebbe essersi inceppato il si
     git pull
     hugo
 
+*(Nota: grazie alla configurazione SSH, il comando `git pull` non ti chiederà alcuna password o token).*
+
 ### C. Se il login su `/admin/` smette di funzionare
 Controlla il container Docker:
 
@@ -101,7 +101,7 @@ Se modifichi `hugo.toml` (es. per cambiare il titolo del sito o i menu), ricorda
 
 ## 5. Sicurezza e Backup
 
-*   **Token e Password**: Le tue credenziali (GitHub Client ID, Secret, Token PAT, ecc.) non sono mai salvate nel codice del sito (che è pubblico), ma in file locali del server o nelle variabili del container Docker.
+*   **Autenticazione**: L'accesso a GitHub per i push manuali (e per il deploy automatico) avviene tramite **chiave SSH**. Il vecchio Personal Access Token (PAT) non è più necessario per il terminale. Le credenziali OAuth per il pannello CMS (Client ID e Secret) sono salvate in modo sicuro nel container Docker.
 *   **Backup dei contenuti**: Tutti i tuoi articoli sono al sicuro su GitHub. Se il server dovesse esplodere, ti basterà clonare di nuovo il repository su un nuovo server, installare Hugo, Nginx e Docker, e ripristinare i file di configurazione per riavere tutto.
 *   **Aggiornamenti**: Di tanto in tanto, puoi aggiornare il container OAuth con:
 

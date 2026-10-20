@@ -19,7 +19,14 @@ enableRobotsTXT = true
 [params.homeInfoParams]
   Title = "Benvenuto"
   Content = "Questo è il mio sito Hugo con PaperMod."
-
+[params.profileMode]
+  enabled = true
+  title = "Post-it"
+  subtitle = "Il mio archivio personale di appunti e ricette"
+  imageUrl = "/images/home.jpg" # Sostituisci con il nome del file che caricherai
+  imageTitle = "Immagine di profilo"
+  imageWidth = 200
+  imageHeight = 200
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/"

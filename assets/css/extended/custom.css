@@ -1,5 +1,5 @@
 body {
-    background-image: linear-gradient(rgba(15, 15, 15, 0.1), rgba(15, 15, 15, 0.1)), url('/images/sfondo.jpg') !important;
+    background-image: linear-gradient(rgba(15, 15, 15, 0.7), rgba(15, 15, 15, 0.7)), url('/images/sfondo.jpg') !important;
     background-size: cover;
     background-attachment: fixed;
     background-position: center;

@@ -1,0 +1,14 @@
+body {
+    background-image: linear-gradient(rgba(15, 15, 15, 0.1), rgba(15, 15, 15, 0.1)), url('/images/sfondo.jpg') !important;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/* Rende trasparenti i contenitori dei post e delle pagine */
+.main, 
+.post-single,
+.post-entry {
+    background: transparent !important;
+}
+

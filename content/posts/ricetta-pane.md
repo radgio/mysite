@@ -2,6 +2,8 @@
 title: Ricetta Pane
 date: 2026-10-19T16:03:00.000+02:00
 draft: false
+categories:
+  - Impast&Forno
 ---
 1. 250 Manitoba zero
 2. 250 semola o integrale

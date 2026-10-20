@@ -11,4 +11,9 @@ body {
 .post-entry {
     background: transparent !important;
 }
-
+/* (Opzionale) Aggiunge un leggero effetto vetro sfocato per far risaltare il testo */
+.main {
+    background: rgba(15, 15, 15, 0.4) !important;
+    backdrop-filter: blur(5px);
+    border-radius: var(--radius);
+}

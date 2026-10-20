@@ -25,8 +25,8 @@ enableRobotsTXT = true
   subtitle = "Il mio archivio personale di appunti e ricette"
   imageUrl = "/images/home.jpg" # Sostituisci con il nome del file che caricherai
   imageTitle = "Immagine di profilo"
-  imageWidth = 200
-  imageHeight = 200
+  imageWidth = 500
+  imageHeight = 500
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/"

@@ -1,5 +1,6 @@
 ---
 title: Ricetta Pane
+cover: /images/pane.png
 date: 2026-10-19T16:03:00.000+02:00
 draft: false
 categories:

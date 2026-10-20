@@ -1,4 +1,10 @@
 ---
+title: Manuale Utente
+date: 2026-10-19
+draft: false
+---
+
+---
 title: "Manuale Utente"
 date: 2026-10-19
 draft: false
@@ -6,6 +12,9 @@ draft: false
 
 # Manuale Utente e Manutenzione: Hugo + PaperMod + Decap CMS Self-Hosted
 ...
+
+# Manuale Utente e Manutenzione: Hugo + PaperMod + Decap CMS Self-Hosted
+
 Questo documento riassume l'architettura, la configurazione e i flussi di lavoro del tuo sito web statico, completo di pannello di amministrazione (CMS) e deploy automatico.
 
 ## 1. Architettura del Sistema
@@ -15,7 +24,7 @@ Il sistema è composto da quattro componenti principali che lavorano insieme:
 1.  **Hugo + Tema PaperMod**: Il generatore di siti statici. Prende i file Markdown e li trasforma in HTML/CSS/JS pronti per il web.
 2.  **Nginx**: Il web server. Serve i file statici generati da Hugo e fa da "Reverse Proxy" per le chiamate di autenticazione e per i webhook.
 3.  **Decap CMS + Proxy OAuth (Docker)**: Il pannello di amministrazione web (`/admin/`). Permette di scrivere articoli dal browser. Il container Docker `decap-oauth` gestisce in modo sicuro il login tramite GitHub.
-4.  **GitHub Webhook + Servizio Locale**: Il sistema di deploy automatico. Quando pubblichi un articolo, GitHub avvisa il tuo server, che scarica le modifiche (tramite autenticazione SSH, senza chiedere password) e rigenera il sito in automatico.
+4.  **GitHub Webhook + Servizio Locale**: Il sistema di deploy automatico. Quando pubblichi un articolo, GitHub avvisa il tuo server, che scarica le modifiche e rigenera il sito in automatico.
 
 ---
 
@@ -40,7 +49,7 @@ Dimentica il terminale per la scrittura quotidiana. Tutto si fa dal browser.
 ## 3. Struttura delle Directory del Server
 
 *   `/opt/web/mysite/` -> La cartella principale del progetto Hugo.
-*   `/opt/web/mysite/content/` -> Qui risiedono i file `.md` dei tuoi articoli e pagine.
+*   `/opt/web/mysite/content/` -> Qui risiedono i file `.md` dei tuoi articoli.
 *   `/opt/web/mysite/static/` -> File statici (es. immagini, il pannello `admin/`).
 *   `/opt/web/mysite/public/` -> La cartella generata da Hugo con il sito pronto. **Nginx serve questa cartella**.
 *   `/opt/web/mysite/hugo.toml` -> Il file di configurazione del sito (titolo, URL, ecc.).
@@ -73,8 +82,6 @@ Se pubblichi un articolo ma il sito non cambia, potrebbe essersi inceppato il si
     git pull
     hugo
 
-*(Nota: grazie alla configurazione SSH, il comando `git pull` non ti chiederà alcuna password o token).*
-
 ### C. Se il login su `/admin/` smette di funzionare
 Controlla il container Docker:
 
@@ -101,7 +108,7 @@ Se modifichi `hugo.toml` (es. per cambiare il titolo del sito o i menu), ricorda
 
 ## 5. Sicurezza e Backup
 
-*   **Autenticazione**: L'accesso a GitHub per i push manuali (e per il deploy automatico) avviene tramite **chiave SSH**. Il vecchio Personal Access Token (PAT) non è più necessario per il terminale. Le credenziali OAuth per il pannello CMS (Client ID e Secret) sono salvate in modo sicuro nel container Docker.
+*   **Token e Password**: Le tue credenziali (GitHub Client ID, Secret, Token PAT, ecc.) non sono mai salvate nel codice del sito (che è pubblico), ma in file locali del server o nelle variabili del container Docker.
 *   **Backup dei contenuti**: Tutti i tuoi articoli sono al sicuro su GitHub. Se il server dovesse esplodere, ti basterà clonare di nuovo il repository su un nuovo server, installare Hugo, Nginx e Docker, e ripristinare i file di configurazione per riavere tutto.
 *   **Aggiornamenti**: Di tanto in tanto, puoi aggiornare il container OAuth con:
 
@@ -109,3 +116,63 @@ Se modifichi `hugo.toml` (es. per cambiare il titolo del sito o i menu), ricorda
     docker stop decap-oauth
     docker rm decap-oauth
     # Rilancia il comando docker run che hai usato per crearlo
+	
+## 6. Gestione dei Contenuti e Organizzazione
+
+---
+
+Il sito è pensato per essere un archivio personale e un blog. Per mantenere l'ordine, sfruttiamo due strumenti nativi di Hugo: **Categorie** e **Tag**.
+
+### La differenza tra Categorie e Tag
+*   **Categorie (Macro-argomenti)**: Servono per dividere il sito in "scaffali" principali (es. *Ricette*, *Note Tecniche*, *Appunti Personali*). Un articolo può avere una o più categorie, ma in genere è meglio assegnarne una principale.
+*   **Tag (Parole chiave)**: Servono per etichettare in modo specifico l'articolo (es. *pasta*, *nginx*, *proxmox*). Più tag usi, più è facile che articoli diversi su argomenti simili si colleghino tra loro.
+
+### Come inserire un nuovo articolo
+1. Vai su `/admin/` e clicca su **Posts** -> **New Posts**.
+2. Compila i campi:
+   *   **Title**: Il titolo.
+   *   **Publish Date**: Data e ora.
+   *   **Draft**: Lascia la spunta se è una bozza (non sarà visibile online).
+   *   **Categories**: Digita il nome della categoria (es. `Ricette`) e premi Invio per confermarla.
+   *   **Tags**: Digita le parole chiave (es. `pasta`, `veloce`) e premi Invio.
+   *   **Body**: Scrivi il testo. Per inserire un'immagine, usa l'icona dedicata nella barra degli strumenti (verrà caricata in automatico).
+3. Clicca su **Publish**. Il webhook farà il resto in pochi secondi.
+
+---
+
+## 7. La "Sindrome della Cache" (Risoluzione Problemi)
+
+Durante la configurazione abbiamo scoperto che **il 90% dei problemi "strani" è causato dalla cache del browser**. Se modifichi qualcosa (come un'icona, un menu o la configurazione di Decap CMS) ma non vedi le modifiche, non è un errore del server: è il tuo browser che si rifiuta di scaricare i file nuovi.
+
+### Cosa fare quando le modifiche non appaiono
+1.  **Hard Refresh della pagina**: 
+    *   Windows/Linux: `Ctrl + F5`
+    *   Mac: `Cmd + Shift + R`
+2.  **Navigazione in incognito**: Apri il sito in una finestra privata. Se lì funziona, il problema è al 100% la cache.
+3.  **Pulire la cache locale di Decap CMS**: 
+    Se hai modificato il file `config.yml` (es. per aggiungere campi) ma il pannello `/admin/` non li mostra:
+    *   Apri `/admin/` e premi `F12` (Strumenti di sviluppo).
+    *   Vai nella scheda **Application** (o *Applicazione*).
+    *   Sotto **Local Storage**, seleziona il tuo dominio.
+    *   Clicca con il tasto destro e fai **Clear** (Svuota).
+    *   Ricarica la pagina `/admin/`.
+	
+---
+
+## 8. Aggiornare la Configurazione del Sito (Manutenzione)
+
+A differenza degli articoli che scrivi dal pannello, i file di configurazione (come `hugo.toml` o `static/admin/config.yml`) **non si aggiornano da soli**. Se devi fare modifiche strutturali (es. aggiungere una nuova voce al menu, cambiare i campi del CMS, modificare il titolo del sito), devi seguire questi passaggi dal terminale del server.
+
+### Procedura Standard di Aggiornamento
+1. **Modifica i file**:
+   Apri i file che devi modificare con l'editor di testo (es. `nano /opt/web/mysite/hugo.toml` o `nano /opt/web/mysite/static/admin/config.yml`).
+2. **Rigenera il sito e invia le modifiche a GitHub**:
+   Esegui i seguenti comandi per compilare il sito e salvare le modifiche nel repository:
+   ```bash
+   cd /opt/web/mysite
+   hugo
+   git add static/admin/config.yml hugo.toml
+   git commit -m "Aggiunte categorie al CMS e al menu"
+   git push
+
+

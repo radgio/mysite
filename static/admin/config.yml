@@ -22,6 +22,7 @@ collections:
         required: false
         fields:
           - { label: "Image", name: "image", widget: "image", required: false }
+          - { label: "Hide in List", name: "hiddenInList", widget: "boolean", required: false, default: false }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
       - { label: "Categories", name: "categories", widget: "list", required: false }
       - { label: "Tags", name: "tags", widget: "list", required: false }

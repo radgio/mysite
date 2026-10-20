@@ -175,4 +175,20 @@ A differenza degli articoli che scrivi dal pannello, i file di configurazione (c
    git commit -m "Aggiunte categorie al CMS e al menu"
    git push
 
+### ⚠️ Attenzione: Conflitti tra Terminale e Pannello CMS
 
+Il tuo sito ha due modi per modificare i file: il **terminale** del server e il **pannello di amministrazione** (`/admin/`). Questi due metodi **non comunicano tra loro in tempo reale**. 
+
+Se modifichi un file (come il `manuale.md` o `config.yml`) direttamente sul server e poi, senza aver fatto il push, provi a fare un `git pull` per scaricare le modifiche fatte dal pannello CMS (o viceversa), Git andrà in errore:
+
+> `error: Your local changes to the following files would be overwritten by merge`
+
+**La regola d'oro:**
+Scegli **un solo metodo** per ogni modifica e portala a termine. Se lavori dal pannello CMS, usa sempre quello per i contenuti. Se devi fare modifiche strutturali (come cambiare il `config.yml` o `hugo.toml`), fallo da terminale, ma assicurati di eseguire sempre `git push` prima di tornare a usare il pannello.
+
+**Come risolvere se succede:**
+Se Git si blocca per questo motivo e vuoi mantenere le modifiche fatte da GitHub (o dal CMS), puoi scartare le modifiche locali del server con:
+```bash
+git checkout -- nome_del_file.md
+git pull
+hugo

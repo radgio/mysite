@@ -1,6 +1,6 @@
 baseURL = "https://nginx-pa.duckdns.org/"
-languageCode = "it-it"
-title = "Il Mio Sito"
+locale = "it-it"
+title = "Post-it"
 theme = "PaperMod"
 
 enableRobotsTXT = true
@@ -12,7 +12,10 @@ enableRobotsTXT = true
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
-
+[params.assets]
+  favicon = "/favicon.ico"
+  favicon16x16 = "/favicon-16x16.png"
+  favicon32x32 = "/favicon-32x32.png"
 [params.homeInfoParams]
   Title = "Benvenuto"
   Content = "Questo è il mio sito Hugo con PaperMod."
@@ -28,7 +31,17 @@ enableRobotsTXT = true
     url = "/posts/"
     weight = 10
   [[menu.main]]
+    identifier = "categories"
+    name = "Categorie"
+    url = "/categories/"
+    weight = 15
+  [[menu.main]]
     identifier = "tags"
     name = "Tags"
     url = "/tags/"
     weight = 20
+  [[menu.main]]
+    identifier = "manuale"
+    name = "Manuale"
+    url = "/manuale/"
+    weight = 30

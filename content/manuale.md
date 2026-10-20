@@ -3,16 +3,6 @@ title: Manuale Utente
 date: 2026-10-19
 draft: false
 ---
-
----
-title: "Manuale Utente"
-date: 2026-10-19
-draft: false
----
-
-# Manuale Utente e Manutenzione: Hugo + PaperMod + Decap CMS Self-Hosted
-...
-
 # Manuale Utente e Manutenzione: Hugo + PaperMod + Decap CMS Self-Hosted
 
 Questo documento riassume l'architettura, la configurazione e i flussi di lavoro del tuo sito web statico, completo di pannello di amministrazione (CMS) e deploy automatico.

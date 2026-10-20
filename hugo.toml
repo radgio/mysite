@@ -23,10 +23,13 @@ enableRobotsTXT = true
   enabled = true
   title = "Post-it"
   subtitle = "Il mio archivio personale di appunti e ricette"
-  imageUrl = "/images/home.jpg" # Sostituisci con il nome del file che caricherai
+  imageUrl = "/images/home.jpg"
   imageTitle = "Immagine di profilo"
-  imageWidth = 300
-  imageHeight = 300
+  imageWidth = 600
+  
+  [[params.profileMode.buttons]]
+    name = "Vai all'Archivio"
+    url = "/categories/"
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/"

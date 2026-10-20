@@ -1,8 +1,8 @@
 ---
 title: Ricetta Pane
-cover:
-  image: /images/pane.jpg
 date: 2026-10-19T16:03:00.000+02:00
+cover:
+  image: ""
 draft: false
 categories:
   - Impast&Forno

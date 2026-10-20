@@ -1,5 +1,5 @@
 body {
-    background-image: linear-gradient(rgba(15, 15, 15, 0.7), rgba(15, 15, 15, 0.7)), url('/images/sfondo.jpg') !important;
+    background-image: linear-gradient(rgba(15, 15, 15, 0.01), rgba(15, 15, 15, 0.01)), url('/images/sfondo.jpg') !important;
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -13,7 +13,15 @@ body {
 }
 /* (Opzionale) Aggiunge un leggero effetto vetro sfocato per far risaltare il testo */
 .main {
-    background: rgba(15, 15, 15, 0.4) !important;
+    background: rgba(15, 15, 15, 0.01) !important;
     backdrop-filter: blur(5px);
     border-radius: var(--radius);
+}
+/* Rimuove il cerchio e imposta un formato rettangolare */
+.profile img {
+    border-radius: 12px !important; /* Angoli arrotondati ma non cerchio */
+    object-fit: cover;
+    max-width: 100% !important; /* Sovrascrive il limite di larghezza di PaperMod */
+    width: 600px; /* Regola questa larghezza in base a quanto la vuoi grande */
+    height: auto !important; /* Mantiene le proporzioni corrette */
 }

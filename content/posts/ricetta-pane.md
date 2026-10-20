@@ -2,7 +2,7 @@
 title: Ricetta Pane
 date: 2026-10-19T16:03:00.000+02:00
 cover:
-  image: ""
+  image: /images/pane.jpg
 draft: false
 categories:
   - Impast&Forno

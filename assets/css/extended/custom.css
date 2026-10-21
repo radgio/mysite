@@ -19,7 +19,7 @@ body {
 }
 /* Rimuove il cerchio e imposta un formato rettangolare */
 .profile img {
-    border-radius: 32px !important; /* Angoli arrotondati ma non cerchio */
+    border-radius: 15px !important; /* Angoli arrotondati ma non cerchio */
     object-fit: cover;
     max-width: 100% !important; /* Sovrascrive il limite di larghezza di PaperMod */
     width: 600px; /* Regola questa larghezza in base a quanto la vuoi grande */

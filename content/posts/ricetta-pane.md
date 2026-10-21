@@ -1,5 +1,5 @@
 ---
-title: Ricetta Pane
+title: "Ricetta Pane Soffice "
 date: 2026-10-19T16:03:00.000+02:00
 cover:
   image: /images/pane.jpg
@@ -8,7 +8,7 @@ draft: false
 categories:
   - Impast&Forno
 tags:
-  - pane
+  - pane pancarrè
 ---
 1. 250g Manitoba zero
 2. 250g semola o integrale

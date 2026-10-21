@@ -8,7 +8,8 @@ draft: false
 categories:
   - Impast&Forno
 tags:
-  - pane pancarrè
+  - pane
+  - pancarrè
 ---
 1. 250g Manitoba zero
 2. 250g semola o integrale

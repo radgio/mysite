@@ -3,7 +3,7 @@ title: DNS Duckdns.org
 date: 2026-10-22T09:07:00.000+02:00
 cover:
   hiddenInList: true
-  image: /images/github.png
+  image: ""
 draft: false
 categories:
   - dns
@@ -19,3 +19,5 @@ User GitHub
 ![alias54.gianni@gmail.com](/images/alias54.gianni.png)
 
 ![GitHub](/images/github.png)
+
+![alias.gianni@gmail.com](/images/alias.gianni.png)

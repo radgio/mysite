@@ -2,7 +2,8 @@
 title: Manuale Operativo SolarHub
 date: 2026-10-22T10:53:00.000+02:00
 cover:
-  hiddenInList: false
+  hiddenInList: true
+  image: /images/fotovoltaico.png
 draft: false
 categories:
   - manuali

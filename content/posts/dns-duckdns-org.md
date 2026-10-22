@@ -16,7 +16,7 @@ User alias.gianni@gmail.com
 
 User alias54.gianni@gmail.com
 
-User GitHub
+User github.com
 
 ![alias54.gianni@gmail.com](/images/alias54.gianni.png "Palermo e Lacchiarella")
 

@@ -72,4 +72,4 @@ Uva passa 50g
 
 **Glassa:**
 
-3 Albumi e 300g zucchero.
+1 Albumi e 100g zucchero.

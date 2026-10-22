@@ -2,7 +2,8 @@
 title: Manuale Post-It Web
 date: 2026-10-22T10:39:00.000+02:00
 cover:
-  hiddenInList: false
+  hiddenInList: true
+  image: /images/home.jpg
 draft: false
 categories:
   - manuali
@@ -10,4 +11,4 @@ tags:
   - post-it
   - web
 ---
-questo è il manuale <https://nginx-pa.duckdns.org/manuale/>
+#### **Manuale Operativo Post-It**  <https://nginx-pa.duckdns.org/manuale/>

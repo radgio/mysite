@@ -6,7 +6,7 @@ cover:
   hiddenInList: true
 draft: false
 categories:
-  - Impast&Forno
+  - Forno
 tags:
   - pane
   - pancarrè

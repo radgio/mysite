@@ -20,6 +20,6 @@ User github.com
 
 ![alias54.gianni@gmail.com](/images/alias54.gianni.png "Palermo e Lacchiarella")
 
-![github.com](/images/github.png "Palermo")
+![radgio@github.com](/images/github.png "Palermo")
 
 ![alias.gianni@gmail.com](/images/alias.gianni.png "Lacchiarella")

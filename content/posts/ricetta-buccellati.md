@@ -3,7 +3,7 @@ title: Ricetta Buccellati
 date: 2026-10-22T10:11:00.000+02:00
 cover:
   hiddenInList: true
-  image: /images/buccellati.jpg
+  image: /images/image_91419d7.jpg
 draft: false
 categories:
   - Forno

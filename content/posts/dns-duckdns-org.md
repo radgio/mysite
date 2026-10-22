@@ -6,9 +6,11 @@ cover:
   image: ""
 draft: false
 categories:
-  - dns
+  - networking
 tags:
-  - motori
+  - dns
+  - palermo
+  - lacchiarella
 ---
 User alias.gianni@gmail.com
 
@@ -16,8 +18,8 @@ User alias54.gianni@gmail.com
 
 User GitHub
 
-![alias54.gianni@gmail.com](/images/alias54.gianni.png)
+![alias54.gianni@gmail.com](/images/alias54.gianni.png "Palermo e Lacchiarella")
 
-![GitHub](/images/github.png)
+![GitHub](/images/github.png "Palermo")
 
-![alias.gianni@gmail.com](/images/alias.gianni.png)
+![alias.gianni@gmail.com](/images/alias.gianni.png "Lacchiarella")

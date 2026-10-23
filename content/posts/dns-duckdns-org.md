@@ -22,4 +22,4 @@ User radgio@github.com
 
 ![radgio@github.com](/images/github.png "Palermo")
 
-![alias.gianni@gmail.com]( "Lacchiarella(MI)")
+![aliasgianni@gmail.com](/images/screenshot-2026-10-23-145056.png "Lacchiarella(MI)")

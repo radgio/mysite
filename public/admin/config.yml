@@ -1,0 +1,37 @@
+backend:
+  name: github
+  repo: radgio/mysite
+  branch: main
+  base_url: https://nginx-pa.duckdns.org  # Il tuo dominio (dove Nginx inoltra /auth e /callback)
+
+media_folder: "static/images"
+public_folder: "/images"
+
+collections:
+  - name: "posts"
+    label: "Posts"
+    folder: "content/posts"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - label: "Cover"
+        name: "cover"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Image", name: "image", widget: "image", required: false }
+          - { label: "Hide in List", name: "hiddenInList", widget: "boolean", required: false, default: false }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Categories", name: "categories", widget: "list", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+  - name: "pages"
+    label: "Pagine"
+    folder: "content/"
+    create: false
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Body", name: "body", widget: "markdown" }

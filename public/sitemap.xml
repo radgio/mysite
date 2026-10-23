@@ -2,21 +2,64 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nginx-pa.duckdns.org/categories/</loc>
+    <lastmod>2026-10-23T14:21:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/categories/leonardo/</loc>
+    <lastmod>2026-10-23T14:21:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/tags/menu/</loc>
+    <lastmod>2026-10-23T14:21:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/posts/menu-leo/</loc>
+    <lastmod>2026-10-23T14:21:00+02:00</lastmod>
+  </url><url>
     <loc>https://nginx-pa.duckdns.org/</loc>
-    <lastmod>2026-10-19T10:00:00+02:00</lastmod>
+    <lastmod>2026-10-23T14:21:00+02:00</lastmod>
   </url><url>
     <loc>https://nginx-pa.duckdns.org/posts/</loc>
-    <lastmod>2026-10-19T10:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://nginx-pa.duckdns.org/posts/primo-post/</loc>
-    <lastmod>2026-10-19T10:00:00+02:00</lastmod>
+    <lastmod>2026-10-23T14:21:00+02:00</lastmod>
   </url><url>
     <loc>https://nginx-pa.duckdns.org/tags/</loc>
-    <lastmod>2026-10-19T10:00:00+02:00</lastmod>
+    <lastmod>2026-10-23T14:21:00+02:00</lastmod>
   </url><url>
-    <loc>https://nginx-pa.duckdns.org/tags/test/</loc>
-    <lastmod>2026-10-19T10:00:00+02:00</lastmod>
+    <loc>https://nginx-pa.duckdns.org/posts/manuale-operativo-solarhub/</loc>
+    <lastmod>2026-10-22T10:53:00+02:00</lastmod>
   </url><url>
-    <loc>https://nginx-pa.duckdns.org/categories/</loc>
+    <loc>https://nginx-pa.duckdns.org/categories/manuali/</loc>
+    <lastmod>2026-10-22T10:53:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/tags/solarhub/</loc>
+    <lastmod>2026-10-22T10:53:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/posts/manuale-post-it-web/</loc>
+    <lastmod>2026-10-22T10:39:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/tags/post-it/</loc>
+    <lastmod>2026-10-22T10:39:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/tags/web/</loc>
+    <lastmod>2026-10-22T10:39:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/tags/buccellati/</loc>
+    <lastmod>2026-10-22T10:11:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/categories/forno/</loc>
+    <lastmod>2026-10-22T10:11:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/posts/ricetta-buccellati/</loc>
+    <lastmod>2026-10-22T10:11:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/tags/pancarr%C3%A8/</loc>
+    <lastmod>2026-10-19T16:03:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/tags/pane/</loc>
+    <lastmod>2026-10-19T16:03:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/posts/ricetta-pane/</loc>
+    <lastmod>2026-10-19T16:03:00+02:00</lastmod>
+  </url><url>
+    <loc>https://nginx-pa.duckdns.org/manuale/</loc>
+    <lastmod>2026-10-19T00:00:00+00:00</lastmod>
   </url>
 </urlset>

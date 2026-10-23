@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Web on Post-it</title>
+    <link>https://nginx-pa.duckdns.org/tags/web/</link>
+    <description>Recent content in Web on Post-it</description>
+    <generator>Hugo</generator>
+    <language>it-it</language>
+    <lastBuildDate>Thu, 22 Oct 2026 10:39:00 +0200</lastBuildDate>
+    <atom:link href="https://nginx-pa.duckdns.org/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Manuale Post-It Web</title>
+      <link>https://nginx-pa.duckdns.org/posts/manuale-post-it-web/</link>
+      <pubDate>Thu, 22 Oct 2026 10:39:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/posts/manuale-post-it-web/</guid>
+      <description>&lt;h4 id=&#34;manuale-operativo-post-it&#34;&gt;&lt;strong&gt;Manuale Operativo Post-It&lt;/strong&gt;  &lt;a href=&#34;https://nginx-pa.duckdns.org/manuale/&#34;&gt;https://nginx-pa.duckdns.org/manuale/&lt;/a&gt;&lt;/h4&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,18 +1,60 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Tags on Il Mio Sito</title>
+    <title>Tags on Post-it</title>
     <link>https://nginx-pa.duckdns.org/tags/</link>
-    <description>Recent content in Tags on Il Mio Sito</description>
+    <description>Recent content in Tags on Post-it</description>
     <generator>Hugo</generator>
     <language>it-it</language>
-    <lastBuildDate>Mon, 19 Oct 2026 10:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 23 Oct 2026 14:21:00 +0200</lastBuildDate>
     <atom:link href="https://nginx-pa.duckdns.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Test</title>
-      <link>https://nginx-pa.duckdns.org/tags/test/</link>
-      <pubDate>Mon, 19 Oct 2026 10:00:00 +0200</pubDate>
-      <guid>https://nginx-pa.duckdns.org/tags/test/</guid>
+      <title>Menu</title>
+      <link>https://nginx-pa.duckdns.org/tags/menu/</link>
+      <pubDate>Fri, 23 Oct 2026 14:21:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/tags/menu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Solarhub</title>
+      <link>https://nginx-pa.duckdns.org/tags/solarhub/</link>
+      <pubDate>Thu, 22 Oct 2026 10:53:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/tags/solarhub/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Post-It</title>
+      <link>https://nginx-pa.duckdns.org/tags/post-it/</link>
+      <pubDate>Thu, 22 Oct 2026 10:39:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/tags/post-it/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Web</title>
+      <link>https://nginx-pa.duckdns.org/tags/web/</link>
+      <pubDate>Thu, 22 Oct 2026 10:39:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/tags/web/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Buccellati</title>
+      <link>https://nginx-pa.duckdns.org/tags/buccellati/</link>
+      <pubDate>Thu, 22 Oct 2026 10:11:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/tags/buccellati/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pancarrè</title>
+      <link>https://nginx-pa.duckdns.org/tags/pancarr%C3%A8/</link>
+      <pubDate>Mon, 19 Oct 2026 16:03:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/tags/pancarr%C3%A8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pane</title>
+      <link>https://nginx-pa.duckdns.org/tags/pane/</link>
+      <pubDate>Mon, 19 Oct 2026 16:03:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/tags/pane/</guid>
       <description></description>
     </item>
   </channel>

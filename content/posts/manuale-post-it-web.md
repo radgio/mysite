@@ -1,6 +1,6 @@
 ---
 title: Manuale Post-It Web
-date: 2026-10-22T10:39:00.000+02:00
+date: 2026-10-23T22:40:00.000+02:00
 cover:
   hiddenInList: true
   image: /images/home.jpg

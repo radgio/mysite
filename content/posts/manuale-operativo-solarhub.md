@@ -10,4 +10,4 @@ categories:
 tags:
   - solarhub
 ---
-#### **Manuale SolarHub**  <https://fvmiccini.duckdns.org/manuale.php>
+#### **Manuale tec SolarHub**  <https://fvmiccini.duckdns.org/manuale.php>

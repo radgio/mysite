@@ -22,7 +22,7 @@ tags:
 
 *4.     Tuorli 3 (uovo con guscio 60g)*
 
-*5.     Lievito vaniglinato pane angeli 1 bustina*
+*5.     Lievito Vaniglinato pane angeli 1 bustina*
 
 *6.     Latte 250g ( con uova 60g)*
 
@@ -34,7 +34,7 @@ tags:
 
 *Lavorare con fruste lo zucchero , lo strutto e le uova per ottenere una consistenza spumosa.*
 
-*Mettere nella spianatoia la farina a fontana e impastare velocemente per far assorbirel’impasto precedente ottenedo un impasto sbicioloso.*
+*Mettere nella spianatoia la farina a fontana e impastare velocemente per far assorbire l’impasto precedente ottenendo un impasto friabile.*
 
 *Allargare l’impasto aggiungendo al centro lievito, buccia grattugiata, essenza di limone e latte (latte poco per volta).*
 
@@ -48,11 +48,11 @@ tags:
 
 Ripieno per 1 kg di farina:
 
-Fichisecchi 500 g
+Fichi secchi 500 g
 
 Marmellata di fichi 150g
 
-Miele diacacia 4g ( puo essere utilizzato anche il millefiori)
+Miele di acacia 4g ( può essere utilizzato anche il millefiori)
 
 Mandorle tostate 100g
 

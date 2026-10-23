@@ -213,3 +213,95 @@ git pull
 hugo
 ```
 
+---
+
+## 9. Upload Automatico di PDF e Pulizia File
+
+Per gestire i PDF mensili (es. il menu) senza usare il CMS, è stato creato un sistema di upload autonomo accessibile da browser.
+
+### Come funziona
+1.  Vai su `https://nginx-pa.duckdns.org/carica-pdf`.
+2.  Seleziona un file PDF dal tuo computer e clicca su **Carica**.
+3.  Il file verrà automaticamente rinominato in **`menu-mese.pdf`** e salvato in `/opt/web/mysite/static/uploads/`.
+4.  Lo script eseguirà in automatico:
+    *   `git pull` (per allinearsi a GitHub).
+    *   `hugo` (per rigenerare il sito).
+    *   `git add -A` (per includere tutte le modifiche).
+    *   `git commit` e `git push` (per inviare tutto su GitHub).
+5.  Il file sarà subito disponibile al link: `https://nginx-pa.duckdns.org/uploads/menu-mese.pdf`.
+
+### Pulizia automatica
+Ogni volta che carichi un nuovo PDF, lo script controlla la cartella `static/uploads/` e **cancella i file più vecchi di 90 giorni** (escluso `menu-mese.pdf`), per evitare che il repository diventi troppo pesante.
+
+### Link nel sito
+Per aprire il PDF in una nuova finestra, inserisci nel Body del post:
+    <a href="/uploads/menu-mese.pdf" target="_blank">Apri il Menu del Mese</a>
+
+*(Ricorda di abilitare `unsafe = true` in `hugo.toml` per permettere l'HTML nel Markdown).*
+
+### Configurazione Nginx (Importante)
+Affinché l'upload funzioni, il file `/etc/nginx/sites-available/miosito` deve contenere questa `location`, con lo **slash finale** in `proxy_pass`:
+
+    location ^~ /carica-pdf {
+        proxy_pass http://127.0.0.1:5000/;  # Lo slash finale è fondamentale!
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        client_max_body_size 50M;
+    }
+
+---
+
+## 10. Risoluzione dei Conflitti tra Nginx e NPM
+
+Durante la configurazione, abbiamo scoperto che Nginx può essere molto "testardo" con le priorità delle regole e con i duplicati.
+
+### Il warning "conflicting server name"
+Se Nginx mostra il messaggio: `[warn] conflicting server name "nginx-pa.duckdns.org" on 0.0.0.0:80, ignored`, significa che ci sono **due blocchi `server`** che provano a gestire lo stesso dominio. 
+
+**Soluzione**: Rimuovi il blocco `server` da `/etc/nginx/nginx.conf` e lascia la configurazione **solo** nel file `/etc/nginx/sites-available/miosito`. Dopo la modifica, riavvia con `systemctl restart nginx` e il warning sparirà.
+
+### NPM: attenzione alle configurazioni custom
+Se NPM restituisce errori `400 Bad Request` o `401 Unauthorized`, spesso è colpa di configurazioni duplicate nella sezione "Custom Locations". NPM aggiunge già i suoi header, quindi non reinserirli manualmente. Se hai dubbi, svuota quella sezione e lascia solo i campi base.
+
+---
+
+## 11. Riepilogo dei Servizi Attivi
+
+| Servizio | Comando di stato | Porta |
+| :--- | :--- | :--- |
+| Nginx | `systemctl status nginx` | 80 |
+| Docker (OAuth Decap) | `docker ps` | 9000 |
+| GitHub Webhook | `systemctl status github-webhook` | 9999 |
+| Uploader PDF | `systemctl status uploader` | 5000 |
+
+---
+
+## 12. Allineamento Manuale e Risoluzione Conflitti Git
+
+A volte, modificando file da terminale o usando l'uploader mentre il CMS è in uso, Git può bloccare le operazioni con errori di "conflitto". Ecco come risolvere.
+
+### Errore: "Your local changes would be overwritten"
+Succede quando modifichi un file (es. `manuale.md`) sul server e poi provi a fare `git pull`, ma su GitHub c'è una versione diversa di quel file.
+**Soluzione**: Scarta le modifiche locali di quel file e allineati a GitHub:
+    git checkout -- content/manuale.md
+    git pull
+    hugo
+
+### Errore: "non-fast-forward" o "divergent branches"
+Succede quando il server ha commit locali non ancora pushati, e GitHub ha altri commit fatti dal CMS.
+**Soluzione**: Esegui il pull con la strategia di merge per unire le due storie:
+    git config pull.rebase false
+    git pull
+    # Se si apre l'editor, salva (Ctrl+O, Invio, Ctrl+X)
+    git push
+
+### Errore: "nothing to commit" durante l'upload
+Se carichi un PDF identico a uno già presente, Git non ha nulla da salvare.
+**Soluzione**: È normale. Il sistema mostra il messaggio "File caricato, ma nessuna modifica da salvare". Il file è già aggiornato.
+
+### Riallineamento totale (La procedura di emergenza)
+Se il repository locale è completamente incasinato e vuoi riportare il server esattamente a com'è su GitHub, esegui:
+    git fetch origin
+    git reset --hard origin/main
+    hugo
+*(Attenzione: questo cancella tutte le modifiche locali non pushate).*

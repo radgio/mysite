@@ -1,5 +1,5 @@
 ---
-title: Menu Leonardo
+title: Menu Leo
 date: 2026-10-23T14:21:00.000+02:00
 cover:
   hiddenInList: false

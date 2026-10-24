@@ -1,0 +1,19 @@
+{{- with site.Params.profileMode }}
+<div class="profile_inner">
+    {{- if .imageUrl -}}
+    <img draggable="false" src="{{ .imageUrl | absURL }}" alt="{{ .imageTitle | default "profile image" }}" title="{{ .imageTitle }}" height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}" />
+    {{- end }}
+    <h1>{{ .title | default site.Title | markdownify }}</h1>
+    <span>{{ .subtitle | markdownify }}</span>
+    
+    {{- if .buttons }}
+    <div class="buttons">
+        {{- range .buttons }}
+        <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="button">
+            {{ .name }}
+        </a>
+        {{- end }}
+    </div>
+    {{- end }}
+</div>
+{{- end }}

@@ -30,6 +30,9 @@ enableRobotsTXT = true
   [[params.profileMode.buttons]]
     name = "Categorie"
     url = "/categories/"
+  [[params.profileMode.buttons]]
+    name = "Area Admin"
+    url = "/admin/"
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/"

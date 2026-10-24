@@ -6,20 +6,20 @@
     <description>Recent content in Categories on Post-it</description>
     <generator>Hugo</generator>
     <language>it-it</language>
-    <lastBuildDate>Fri, 23 Oct 2026 14:21:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 23 Oct 2026 22:40:00 +0200</lastBuildDate>
     <atom:link href="https://nginx-pa.duckdns.org/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Manuali</title>
+      <link>https://nginx-pa.duckdns.org/categories/manuali/</link>
+      <pubDate>Fri, 23 Oct 2026 22:40:00 +0200</pubDate>
+      <guid>https://nginx-pa.duckdns.org/categories/manuali/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Leonardo</title>
       <link>https://nginx-pa.duckdns.org/categories/leonardo/</link>
       <pubDate>Fri, 23 Oct 2026 14:21:00 +0200</pubDate>
       <guid>https://nginx-pa.duckdns.org/categories/leonardo/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Manuali</title>
-      <link>https://nginx-pa.duckdns.org/categories/manuali/</link>
-      <pubDate>Thu, 22 Oct 2026 10:53:00 +0200</pubDate>
-      <guid>https://nginx-pa.duckdns.org/categories/manuali/</guid>
       <description></description>
     </item>
     <item>

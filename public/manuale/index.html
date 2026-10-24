@@ -119,8 +119,8 @@ Hugo &#43; Tema PaperMod: Il generatore di siti statici. Prende i file Markdown 
   "keywords": [
     
   ],
-  "articleBody": "Manuale Utente e Manutenzione: Hugo + PaperMod + Decap CMS Self-Hosted Questo documento riassume l’architettura, la configurazione e i flussi di lavoro del tuo sito web statico, completo di pannello di amministrazione (CMS) e deploy automatico.\n1. Architettura del Sistema Il sistema è composto da quattro componenti principali che lavorano insieme:\nHugo + Tema PaperMod: Il generatore di siti statici. Prende i file Markdown e li trasforma in HTML/CSS/JS pronti per il web. Nginx: Il web server. Serve i file statici generati da Hugo e fa da “Reverse Proxy” per le chiamate di autenticazione e per i webhook. Decap CMS + Proxy OAuth (Docker): Il pannello di amministrazione web (/admin/). Permette di scrivere articoli dal browser. Il container Docker decap-oauth gestisce in modo sicuro il login tramite GitHub. GitHub Webhook + Servizio Locale: Il sistema di deploy automatico. Quando pubblichi un articolo, GitHub avvisa il tuo server, che scarica le modifiche e rigenera il sito in automatico. 2. Flusso di Lavoro Quotidiano (Come scrivere un articolo) Dimentica il terminale per la scrittura quotidiana. Tutto si fa dal browser.\nVai sul tuo sito: https://nginx-pa.duckdns.org/admin/ Clicca su “Login with GitHub” (se non sei già loggato). Nel menu a sinistra, clicca su Posts e poi su New Posts. Compila i campi: Title: Il titolo dell’articolo. Publish Date: La data di pubblicazione. Draft: Metti la spunta se è una bozza (non sarà visibile sul sito). Body: Scrivi il testo (supporta il Markdown). Per aggiungere immagini, usa il pulsante “Add image” nel menu dell’editor. Clicca su Publish in alto a destra. Attendi 10-20 secondi. Il Webhook avviserà il server, che eseguirà git pull e hugo in background. Ricarica la homepage del sito e vedrai il nuovo articolo online. 3. Struttura delle Directory del Server /opt/web/mysite/ -\u003e La cartella principale del progetto Hugo. /opt/web/mysite/content/ -\u003e Qui risiedono i file .md dei tuoi articoli. /opt/web/mysite/static/ -\u003e File statici (es. immagini, il pannello admin/). /opt/web/mysite/public/ -\u003e La cartella generata da Hugo con il sito pronto. Nginx serve questa cartella. /opt/web/mysite/hugo.toml -\u003e Il file di configurazione del sito (titolo, URL, ecc.). /opt/web/deploy.sh -\u003e Lo script che esegue git pull e hugo quando arriva un webhook. /etc/github-webhook.json -\u003e Configurazione del servizio di webhook. /etc/nginx/sites-available/miosito -\u003e Configurazione di Nginx per il sito e i proxy. 4. Manutenzione e Comandi Utili Se qualcosa non funziona, ecco come controllare i “motori” del sistema.\nA. Controllare lo stato dei servizi Esegui questi comandi per verificare che tutto sia in esecuzione:\n# Stato di Nginx systemctl status nginx # Stato del container per il login OAuth docker ps # Stato del servizio per il deploy automatico systemctl status github-webhook B. Se il sito non si aggiorna dopo il “Publish” Se pubblichi un articolo ma il sito non cambia, potrebbe essersi inceppato il sistema di deploy automatico. Puoi forzare l’aggiornamento manuale entrando nel server e digitando:\ncd /opt/web/mysite git pull hugo C. Se il login su /admin/ smette di funzionare Controlla il container Docker:\ndocker logs decap-oauth Se il container è fermo, riavvialo:\ndocker restart decap-oauth D. Modificare la configurazione di Decap CMS Se devi cambiare i campi del pannello (es. aggiungere un campo “Autore”), modifica il file:\nnano /opt/web/mysite/static/admin/config.yml Dopo averlo salvato, esegui hugo nella cartella del sito e fai il push su GitHub per applicare le modifiche al pannello.\nE. Modificare il tema o la configurazione di Hugo Se modifichi hugo.toml (es. per cambiare il titolo del sito o i menu), ricordati di rigenerare:\ncd /opt/web/mysite hugo 5. Sicurezza e Backup Token e Password: Le tue credenziali (GitHub Client ID, Secret, Token PAT, ecc.) non sono mai salvate nel codice del sito (che è pubblico), ma in file locali del server o nelle variabili del container Docker.\nBackup dei contenuti: Tutti i tuoi articoli sono al sicuro su GitHub. Se il server dovesse esplodere, ti basterà clonare di nuovo il repository su un nuovo server, installare Hugo, Nginx e Docker, e ripristinare i file di configurazione per riavere tutto.\nAggiornamenti: Di tanto in tanto, puoi aggiornare il container OAuth con:\ndocker pull alukovenko/decapcms-oauth2:latest docker stop decap-oauth docker rm decap-oauth\nRilancia il comando docker run che hai usato per crearlo 6. Gestione dei Contenuti e Organizzazione Il sito è pensato per essere un archivio personale e un blog. Per mantenere l’ordine, sfruttiamo due strumenti nativi di Hugo: Categorie e Tag.\nLa differenza tra Categorie e Tag Categorie (Macro-argomenti): Servono per dividere il sito in “scaffali” principali (es. Ricette, Note Tecniche, Appunti Personali). Un articolo può avere una o più categorie, ma in genere è meglio assegnarne una principale. Tag (Parole chiave): Servono per etichettare in modo specifico l’articolo (es. pasta, nginx, proxmox). Più tag usi, più è facile che articoli diversi su argomenti simili si colleghino tra loro. Come inserire un nuovo articolo Vai su /admin/ e clicca su Posts -\u003e New Posts. Compila i campi: Title: Il titolo. Publish Date: Data e ora. Draft: Lascia la spunta se è una bozza (non sarà visibile online). Categories: Digita il nome della categoria (es. Ricette) e premi Invio per confermarla. Tags: Digita le parole chiave (es. pasta, veloce) e premi Invio. Body: Scrivi il testo. Per inserire un’immagine, usa l’icona dedicata nella barra degli strumenti (verrà caricata in automatico). Clicca su Publish. Il webhook farà il resto in pochi secondi. 7. La “Sindrome della Cache” (Risoluzione Problemi) Durante la configurazione abbiamo scoperto che il 90% dei problemi “strani” è causato dalla cache del browser. Se modifichi qualcosa (come un’icona, un menu o la configurazione di Decap CMS) ma non vedi le modifiche, non è un errore del server: è il tuo browser che si rifiuta di scaricare i file nuovi.\nCosa fare quando le modifiche non appaiono Hard Refresh della pagina: Windows/Linux: Ctrl + F5 Mac: Cmd + Shift + R Navigazione in incognito: Apri il sito in una finestra privata. Se lì funziona, il problema è al 100% la cache. Pulire la cache locale di Decap CMS: Se hai modificato il file config.yml (es. per aggiungere campi) ma il pannello /admin/ non li mostra: Apri /admin/ e premi F12 (Strumenti di sviluppo). Vai nella scheda Application (o Applicazione). Sotto Local Storage, seleziona il tuo dominio. Clicca con il tasto destro e fai Clear (Svuota). Ricarica la pagina /admin/. 8. Aggiornare la Configurazione del Sito (Manutenzione) A differenza degli articoli che scrivi dal pannello, i file di configurazione (come hugo.toml o static/admin/config.yml) non si aggiornano da soli. Se devi fare modifiche strutturali (es. aggiungere una nuova voce al menu, cambiare i campi del CMS, modificare il titolo del sito), devi seguire questi passaggi dal terminale del server.\nProcedura Standard di Aggiornamento Modifica i file: Apri i file che devi modificare con l’editor di testo (es. nano /opt/web/mysite/hugo.toml o nano /opt/web/mysite/static/admin/config.yml). Rigenera il sito e invia le modifiche a GitHub: Esegui i seguenti comandi per compilare il sito e salvare le modifiche nel repository: cd /opt/web/mysite hugo git add static/admin/config.yml hugo.toml git commit -m \"Aggiunte categorie al CMS e al menu\" git push ⚠️ Attenzione: Conflitti tra Terminale e Pannello CMS Il tuo sito ha due modi per modificare i file: il terminale del server e il pannello di amministrazione (/admin/). Questi due metodi non comunicano tra loro in tempo reale.\nSe modifichi un file (come il manuale.md o config.yml) direttamente sul server e poi, senza aver fatto il push, provi a fare un git pull per scaricare le modifiche fatte dal pannello CMS (o viceversa), Git andrà in errore:\nerror: Your local changes to the following files would be overwritten by merge\nLa regola d’oro: Scegli un solo metodo per ogni modifica e portala a termine. Se lavori dal pannello CMS, usa sempre quello per i contenuti. Se devi fare modifiche strutturali (come cambiare il config.yml o hugo.toml), fallo da terminale, ma assicurati di eseguire sempre git push prima di tornare a usare il pannello.\nCome risolvere se succede: Se Git si blocca per questo motivo e vuoi mantenere le modifiche fatte da GitHub (o dal CMS), puoi scartare le modifiche locali del server con:\ngit checkout -- nome_del_file.md git pull hugo ",
-  "wordCount" : "1336",
+  "articleBody": "Manuale Utente e Manutenzione: Hugo + PaperMod + Decap CMS Self-Hosted Questo documento riassume l’architettura, la configurazione e i flussi di lavoro del tuo sito web statico, completo di pannello di amministrazione (CMS) e deploy automatico.\n1. Architettura del Sistema Il sistema è composto da quattro componenti principali che lavorano insieme:\nHugo + Tema PaperMod: Il generatore di siti statici. Prende i file Markdown e li trasforma in HTML/CSS/JS pronti per il web. Nginx: Il web server. Serve i file statici generati da Hugo e fa da “Reverse Proxy” per le chiamate di autenticazione e per i webhook. Decap CMS + Proxy OAuth (Docker): Il pannello di amministrazione web (/admin/). Permette di scrivere articoli dal browser. Il container Docker decap-oauth gestisce in modo sicuro il login tramite GitHub. GitHub Webhook + Servizio Locale: Il sistema di deploy automatico. Quando pubblichi un articolo, GitHub avvisa il tuo server, che scarica le modifiche e rigenera il sito in automatico. 2. Flusso di Lavoro Quotidiano (Come scrivere un articolo) Dimentica il terminale per la scrittura quotidiana. Tutto si fa dal browser.\nVai sul tuo sito: https://nginx-pa.duckdns.org/admin/\nClicca su “Login with GitHub” (se non sei già loggato).\nNel menu a sinistra, clicca su Posts e poi su New Posts.\nCompila i campi:\nTitle: Il titolo dell’articolo. Publish Date: La data di pubblicazione. Draft: Metti la spunta se è una bozza (non sarà visibile sul sito). Body: Scrivi il testo (supporta il Markdown). Per aggiungere immagini, usa il pulsante “Add image” nel menu dell’editor. Clicca su Publish in alto a destra.\nAttendi 10-20 secondi. Il Webhook avviserà il server, che eseguirà git pull e hugo in background. Ricarica la homepage del sito e vedrai il nuovo articolo online.\n3. Struttura delle Directory del Server /opt/web/mysite/ -\u003e La cartella principale del progetto Hugo. /opt/web/mysite/content/ -\u003e Qui risiedono i file .md dei tuoi articoli. /opt/web/mysite/static/ -\u003e File statici (es. immagini, il pannello admin/). /opt/web/mysite/public/ -\u003e La cartella generata da Hugo con il sito pronto. Nginx serve questa cartella. /opt/web/mysite/hugo.toml -\u003e Il file di configurazione del sito (titolo, URL, ecc.). /opt/web/deploy.sh -\u003e Lo script che esegue git pull e hugo quando arriva un webhook. /etc/github-webhook.json -\u003e Configurazione del servizio di webhook. /etc/nginx/sites-available/miosito -\u003e Configurazione di Nginx per il sito e i proxy. 4. Manutenzione e Comandi Utili Se qualcosa non funziona, ecco come controllare i “motori” del sistema.\nA. Controllare lo stato dei servizi Esegui questi comandi per verificare che tutto sia in esecuzione:\n# Stato di Nginx systemctl status nginx # Stato del container per il login OAuth docker ps # Stato del servizio per il deploy automatico systemctl status github-webhook B. Se il sito non si aggiorna dopo il “Publish” Se pubblichi un articolo ma il sito non cambia, potrebbe essersi inceppato il sistema di deploy automatico. Puoi forzare l’aggiornamento manuale entrando nel server e digitando:\ncd /opt/web/mysite git pull hugo C. Se il login su /admin/ smette di funzionare Controlla il container Docker:\ndocker logs decap-oauth Se il container è fermo, riavvialo:\ndocker restart decap-oauth D. Modificare la configurazione di Decap CMS Se devi cambiare i campi del pannello (es. aggiungere un campo “Autore”), modifica il file:\nnano /opt/web/mysite/static/admin/config.yml Dopo averlo salvato, esegui hugo nella cartella del sito e fai il push su GitHub per applicare le modifiche al pannello.\nE. Modificare il tema o la configurazione di Hugo Se modifichi hugo.toml (es. per cambiare il titolo del sito o i menu), ricordati di rigenerare:\ncd /opt/web/mysite hugo 5. Sicurezza e Backup Token e Password: Le tue credenziali (GitHub Client ID, Secret, Token PAT, ecc.) non sono mai salvate nel codice del sito (che è pubblico), ma in file locali del server o nelle variabili del container Docker.\nBackup dei contenuti: Tutti i tuoi articoli sono al sicuro su GitHub. Se il server dovesse esplodere, ti basterà clonare di nuovo il repository su un nuovo server, installare Hugo, Nginx e Docker, e ripristinare i file di configurazione per riavere tutto.\nAggiornamenti: Di tanto in tanto, puoi aggiornare il container OAuth con:\ndocker pull alukovenko/decapcms-oauth2:latest docker stop decap-oauth docker rm decap-oauth\nRilancia il comando docker run che hai usato per crearlo 6. Gestione dei Contenuti e Organizzazione Il sito è pensato per essere un archivio personale e un blog. Per mantenere l’ordine, sfruttiamo due strumenti nativi di Hugo: Categorie e Tag.\nLa differenza tra Categorie e Tag Categorie (Macro-argomenti): Servono per dividere il sito in “scaffali” principali (es. Ricette, Note Tecniche, Appunti Personali). Un articolo può avere una o più categorie, ma in genere è meglio assegnarne una principale. Tag (Parole chiave): Servono per etichettare in modo specifico l’articolo (es. pasta, nginx, proxmox). Più tag usi, più è facile che articoli diversi su argomenti simili si colleghino tra loro. Come inserire un nuovo articolo Vai su /admin/ e clicca su Posts -\u003e New Posts.\nCompila i campi:\nTitle: Il titolo. Publish Date: Data e ora. Draft: Lascia la spunta se è una bozza (non sarà visibile online). Categories: Digita il nome della categoria (es. Ricette) e premi Invio per confermarla. Tags: Digita le parole chiave (es. pasta, veloce) e premi Invio. Body: Scrivi il testo. Per inserire un’immagine, usa l’icona dedicata nella barra degli strumenti (verrà caricata in automatico). Clicca su Publish. Il webhook farà il resto in pochi secondi.\n7. La “Sindrome della Cache” (Risoluzione Problemi) Durante la configurazione abbiamo scoperto che il 90% dei problemi “strani” è causato dalla cache del browser. Se modifichi qualcosa (come un’icona, un menu o la configurazione di Decap CMS) ma non vedi le modifiche, non è un errore del server: è il tuo browser che si rifiuta di scaricare i file nuovi.\nCosa fare quando le modifiche non appaiono Hard Refresh della pagina:\nWindows/Linux: Ctrl + F5 Mac: Cmd + Shift + R Navigazione in incognito: Apri il sito in una finestra privata. Se lì funziona, il problema è al 100% la cache.\nPulire la cache locale di Decap CMS: Se hai modificato il file config.yml (es. per aggiungere campi) ma il pannello /admin/ non li mostra:\nApri /admin/ e premi F12 (Strumenti di sviluppo). Vai nella scheda Application (o Applicazione). Sotto Local Storage, seleziona il tuo dominio. Clicca con il tasto destro e fai Clear (Svuota). Ricarica la pagina /admin/. 8. Aggiornare la Configurazione del Sito (Manutenzione) A differenza degli articoli che scrivi dal pannello, i file di configurazione (come hugo.toml o static/admin/config.yml) non si aggiornano da soli. Se devi fare modifiche strutturali (es. aggiungere una nuova voce al menu, cambiare i campi del CMS, modificare il titolo del sito), devi seguire questi passaggi dal terminale del server.\nProcedura Standard di Aggiornamento Modifica i file: Apri i file che devi modificare con l’editor di testo (es. nano /opt/web/mysite/hugo.toml o nano /opt/web/mysite/static/admin/config.yml).\nRigenera il sito e invia le modifiche a GitHub: Esegui i seguenti comandi per compilare il sito e salvare le modifiche nel repository:\ncd /opt/web/mysite hugo git add static/admin/config.yml hugo.toml git commit -m \"Aggiunte categorie al CMS e al menu\" git push ⚠️ Attenzione: Conflitti tra Terminale e Pannello CMS Il tuo sito ha due modi per modificare i file: il terminale del server e il pannello di amministrazione (/admin/). Questi due metodi non comunicano tra loro in tempo reale.\nSe modifichi un file (come il manuale.md o config.yml) direttamente sul server e poi, senza aver fatto il push, provi a fare un git pull per scaricare le modifiche fatte dal pannello CMS (o viceversa), Git andrà in errore:\nerror: Your local changes to the following files would be overwritten by merge\nLa regola d’oro: Scegli un solo metodo per ogni modifica e portala a termine. Se lavori dal pannello CMS, usa sempre quello per i contenuti. Se devi fare modifiche strutturali (come cambiare il config.yml o hugo.toml), fallo da terminale, ma assicurati di eseguire sempre git push prima di tornare a usare il pannello.\nCome risolvere se succede: Se Git si blocca per questo motivo e vuoi mantenere le modifiche fatte da GitHub (o dal CMS), puoi scartare le modifiche locali del server con:\ngit checkout -- nome_del_file.md git pull hugo 9. Upload Automatico di PDF e Pulizia File Per gestire i PDF mensili (es. il menu) senza usare il CMS, è stato creato un sistema di upload autonomo accessibile da browser.\nCome funziona Vai su https://nginx-pa.duckdns.org/carica-pdf. Seleziona un file PDF dal tuo computer e clicca su Carica. Il file verrà automaticamente rinominato in menu-mese.pdf e salvato in /opt/web/mysite/static/uploads/. Lo script eseguirà in automatico: git pull (per allinearsi a GitHub). hugo (per rigenerare il sito). git add -A (per includere tutte le modifiche). git commit e git push (per inviare tutto su GitHub). Il file sarà subito disponibile al link: https://nginx-pa.duckdns.org/uploads/menu-mese.pdf. Pulizia automatica Ogni volta che carichi un nuovo PDF, lo script controlla la cartella static/uploads/ e cancella i file più vecchi di 90 giorni (escluso menu-mese.pdf), per evitare che il repository diventi troppo pesante.\nLink nel sito Per aprire il PDF in una nuova finestra, inserisci nel Body del post: Apri il Menu del Mese\n(Ricorda di abilitare unsafe = true in hugo.toml per permettere l’HTML nel Markdown).\nConfigurazione Nginx (Importante) Affinché l’upload funzioni, il file /etc/nginx/sites-available/miosito deve contenere questa location, con lo slash finale in proxy_pass:\nlocation ^~ /carica-pdf { proxy_pass http://127.0.0.1:5000/; # Lo slash finale è fondamentale! proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; client_max_body_size 50M; } 10. Risoluzione dei Conflitti tra Nginx e NPM Durante la configurazione, abbiamo scoperto che Nginx può essere molto “testardo” con le priorità delle regole e con i duplicati.\nIl warning “conflicting server name” Se Nginx mostra il messaggio: [warn] conflicting server name \"nginx-pa.duckdns.org\" on 0.0.0.0:80, ignored, significa che ci sono due blocchi server che provano a gestire lo stesso dominio.\nSoluzione: Rimuovi il blocco server da /etc/nginx/nginx.conf e lascia la configurazione solo nel file /etc/nginx/sites-available/miosito. Dopo la modifica, riavvia con systemctl restart nginx e il warning sparirà.\nNPM: attenzione alle configurazioni custom Se NPM restituisce errori 400 Bad Request o 401 Unauthorized, spesso è colpa di configurazioni duplicate nella sezione “Custom Locations”. NPM aggiunge già i suoi header, quindi non reinserirli manualmente. Se hai dubbi, svuota quella sezione e lascia solo i campi base.\n11. Riepilogo dei Servizi Attivi Servizio Comando di stato Porta Nginx systemctl status nginx 80 Docker (OAuth Decap) docker ps 9000 GitHub Webhook systemctl status github-webhook 9999 Uploader PDF systemctl status uploader 5000 12. Allineamento Manuale e Risoluzione Conflitti Git A volte, modificando file da terminale o usando l’uploader mentre il CMS è in uso, Git può bloccare le operazioni con errori di “conflitto”. Ecco come risolvere.\nErrore: “Your local changes would be overwritten” Succede quando modifichi un file (es. manuale.md) sul server e poi provi a fare git pull, ma su GitHub c’è una versione diversa di quel file. Soluzione: Scarta le modifiche locali di quel file e allineati a GitHub: git checkout – content/manuale.md git pull hugo\nErrore: “non-fast-forward” o “divergent branches” Succede quando il server ha commit locali non ancora pushati, e GitHub ha altri commit fatti dal CMS. Soluzione: Esegui il pull con la strategia di merge per unire le due storie: git config pull.rebase false git pull # Se si apre l’editor, salva (Ctrl+O, Invio, Ctrl+X) git push\nErrore: “nothing to commit” durante l’upload Se carichi un PDF identico a uno già presente, Git non ha nulla da salvare. Soluzione: È normale. Il sistema mostra il messaggio “File caricato, ma nessuna modifica da salvare”. Il file è già aggiornato.\nRiallineamento totale (La procedura di emergenza) Se il repository locale è completamente incasinato e vuoi riportare il server esattamente a com’è su GitHub, esegui: git fetch origin git reset –hard origin/main hugo (Attenzione: questo cancella tutte le modifiche locali non pushate).\n",
+  "wordCount" : "1933",
   "inLanguage": "en",
   "datePublished": "2026-10-19T00:00:00Z",
   "dateModified": "2026-10-19T00:00:00Z",
@@ -207,7 +207,7 @@ Hugo &#43; Tema PaperMod: Il generatore di siti statici. Prende i file Markdown 
     </h1>
     <div class="post-meta">
 
-<span title='2026-10-19T00:00:00+00:00'>19 ottobre 2026</span>&nbsp;·&nbsp;<span>7 min</span>
+<span title='2026-10-19T00:00:00+00:00'>19 ottobre 2026</span>&nbsp;·&nbsp;<span>10 min</span>
 
 </div>
   </header> 
@@ -225,10 +225,17 @@ Hugo &#43; Tema PaperMod: Il generatore di siti statici. Prende i file Markdown 
 <h2 id="2-flusso-di-lavoro-quotidiano-come-scrivere-un-articolo">2. Flusso di Lavoro Quotidiano (Come scrivere un articolo)<a hidden class="anchor" aria-hidden="true" href="#2-flusso-di-lavoro-quotidiano-come-scrivere-un-articolo">#</a></h2>
 <p>Dimentica il terminale per la scrittura quotidiana. Tutto si fa dal browser.</p>
 <ol>
-<li>Vai sul tuo sito: <code>https://nginx-pa.duckdns.org/admin/</code></li>
-<li>Clicca su <strong>&ldquo;Login with GitHub&rdquo;</strong> (se non sei già loggato).</li>
-<li>Nel menu a sinistra, clicca su <strong>Posts</strong> e poi su <strong>New Posts</strong>.</li>
-<li>Compila i campi:
+<li>
+<p>Vai sul tuo sito: <code>https://nginx-pa.duckdns.org/admin/</code></p>
+</li>
+<li>
+<p>Clicca su <strong>&ldquo;Login with GitHub&rdquo;</strong> (se non sei già loggato).</p>
+</li>
+<li>
+<p>Nel menu a sinistra, clicca su <strong>Posts</strong> e poi su <strong>New Posts</strong>.</p>
+</li>
+<li>
+<p>Compila i campi:</p>
 <ul>
 <li><strong>Title</strong>: Il titolo dell&rsquo;articolo.</li>
 <li><strong>Publish Date</strong>: La data di pubblicazione.</li>
@@ -237,8 +244,12 @@ Hugo &#43; Tema PaperMod: Il generatore di siti statici. Prende i file Markdown 
 <li>Per aggiungere immagini, usa il pulsante &ldquo;Add image&rdquo; nel menu dell&rsquo;editor.</li>
 </ul>
 </li>
-<li>Clicca su <strong>Publish</strong> in alto a destra.</li>
-<li><strong>Attendi 10-20 secondi</strong>. Il Webhook avviserà il server, che eseguirà <code>git pull</code> e <code>hugo</code> in background. Ricarica la homepage del sito e vedrai il nuovo articolo online.</li>
+<li>
+<p>Clicca su <strong>Publish</strong> in alto a destra.</p>
+</li>
+<li>
+<p><strong>Attendi 10-20 secondi</strong>. Il Webhook avviserà il server, che eseguirà <code>git pull</code> e <code>hugo</code> in background. Ricarica la homepage del sito e vedrai il nuovo articolo online.</p>
+</li>
 </ol>
 <hr>
 <h2 id="3-struttura-delle-directory-del-server">3. Struttura delle Directory del Server<a hidden class="anchor" aria-hidden="true" href="#3-struttura-delle-directory-del-server">#</a></h2>
@@ -257,7 +268,7 @@ Hugo &#43; Tema PaperMod: Il generatore di siti statici. Prende i file Markdown 
 <p>Se qualcosa non funziona, ecco come controllare i &ldquo;motori&rdquo; del sistema.</p>
 <h3 id="a-controllare-lo-stato-dei-servizi">A. Controllare lo stato dei servizi<a hidden class="anchor" aria-hidden="true" href="#a-controllare-lo-stato-dei-servizi">#</a></h3>
 <p>Esegui questi comandi per verificare che tutto sia in esecuzione:</p>
-<pre><code># Stato di Nginx
+<pre tabindex="0"><code># Stato di Nginx
 systemctl status nginx
 
 # Stato del container per il login OAuth
@@ -265,31 +276,25 @@ docker ps
 
 # Stato del servizio per il deploy automatico
 systemctl status github-webhook
-</code></pre>
-<h3 id="b-se-il-sito-non-si-aggiorna-dopo-il-publish">B. Se il sito non si aggiorna dopo il &ldquo;Publish&rdquo;<a hidden class="anchor" aria-hidden="true" href="#b-se-il-sito-non-si-aggiorna-dopo-il-publish">#</a></h3>
+</code></pre><h3 id="b-se-il-sito-non-si-aggiorna-dopo-il-publish">B. Se il sito non si aggiorna dopo il &ldquo;Publish&rdquo;<a hidden class="anchor" aria-hidden="true" href="#b-se-il-sito-non-si-aggiorna-dopo-il-publish">#</a></h3>
 <p>Se pubblichi un articolo ma il sito non cambia, potrebbe essersi inceppato il sistema di deploy automatico. Puoi forzare l&rsquo;aggiornamento manuale entrando nel server e digitando:</p>
-<pre><code>cd /opt/web/mysite
+<pre tabindex="0"><code>cd /opt/web/mysite
 git pull
 hugo
-</code></pre>
-<h3 id="c-se-il-login-su-admin-smette-di-funzionare">C. Se il login su <code>/admin/</code> smette di funzionare<a hidden class="anchor" aria-hidden="true" href="#c-se-il-login-su-admin-smette-di-funzionare">#</a></h3>
+</code></pre><h3 id="c-se-il-login-su-admin-smette-di-funzionare">C. Se il login su <code>/admin/</code> smette di funzionare<a hidden class="anchor" aria-hidden="true" href="#c-se-il-login-su-admin-smette-di-funzionare">#</a></h3>
 <p>Controlla il container Docker:</p>
-<pre><code>docker logs decap-oauth
-</code></pre>
-<p>Se il container è fermo, riavvialo:</p>
-<pre><code>docker restart decap-oauth
-</code></pre>
-<h3 id="d-modificare-la-configurazione-di-decap-cms">D. Modificare la configurazione di Decap CMS<a hidden class="anchor" aria-hidden="true" href="#d-modificare-la-configurazione-di-decap-cms">#</a></h3>
+<pre tabindex="0"><code>docker logs decap-oauth
+</code></pre><p>Se il container è fermo, riavvialo:</p>
+<pre tabindex="0"><code>docker restart decap-oauth
+</code></pre><h3 id="d-modificare-la-configurazione-di-decap-cms">D. Modificare la configurazione di Decap CMS<a hidden class="anchor" aria-hidden="true" href="#d-modificare-la-configurazione-di-decap-cms">#</a></h3>
 <p>Se devi cambiare i campi del pannello (es. aggiungere un campo &ldquo;Autore&rdquo;), modifica il file:</p>
-<pre><code>nano /opt/web/mysite/static/admin/config.yml
-</code></pre>
-<p>Dopo averlo salvato, esegui <code>hugo</code> nella cartella del sito e fai il push su GitHub per applicare le modifiche al pannello.</p>
+<pre tabindex="0"><code>nano /opt/web/mysite/static/admin/config.yml
+</code></pre><p>Dopo averlo salvato, esegui <code>hugo</code> nella cartella del sito e fai il push su GitHub per applicare le modifiche al pannello.</p>
 <h3 id="e-modificare-il-tema-o-la-configurazione-di-hugo">E. Modificare il tema o la configurazione di Hugo<a hidden class="anchor" aria-hidden="true" href="#e-modificare-il-tema-o-la-configurazione-di-hugo">#</a></h3>
 <p>Se modifichi <code>hugo.toml</code> (es. per cambiare il titolo del sito o i menu), ricordati di rigenerare:</p>
-<pre><code>cd /opt/web/mysite
+<pre tabindex="0"><code>cd /opt/web/mysite
 hugo
-</code></pre>
-<hr>
+</code></pre><hr>
 <h2 id="5-sicurezza-e-backup">5. Sicurezza e Backup<a hidden class="anchor" aria-hidden="true" href="#5-sicurezza-e-backup">#</a></h2>
 <ul>
 <li>
@@ -316,8 +321,11 @@ docker rm decap-oauth</p>
 </ul>
 <h3 id="come-inserire-un-nuovo-articolo">Come inserire un nuovo articolo<a hidden class="anchor" aria-hidden="true" href="#come-inserire-un-nuovo-articolo">#</a></h3>
 <ol>
-<li>Vai su <code>/admin/</code> e clicca su <strong>Posts</strong> -&gt; <strong>New Posts</strong>.</li>
-<li>Compila i campi:
+<li>
+<p>Vai su <code>/admin/</code> e clicca su <strong>Posts</strong> -&gt; <strong>New Posts</strong>.</p>
+</li>
+<li>
+<p>Compila i campi:</p>
 <ul>
 <li><strong>Title</strong>: Il titolo.</li>
 <li><strong>Publish Date</strong>: Data e ora.</li>
@@ -327,22 +335,28 @@ docker rm decap-oauth</p>
 <li><strong>Body</strong>: Scrivi il testo. Per inserire un&rsquo;immagine, usa l&rsquo;icona dedicata nella barra degli strumenti (verrà caricata in automatico).</li>
 </ul>
 </li>
-<li>Clicca su <strong>Publish</strong>. Il webhook farà il resto in pochi secondi.</li>
+<li>
+<p>Clicca su <strong>Publish</strong>. Il webhook farà il resto in pochi secondi.</p>
+</li>
 </ol>
 <hr>
 <h2 id="7-la-sindrome-della-cache-risoluzione-problemi">7. La &ldquo;Sindrome della Cache&rdquo; (Risoluzione Problemi)<a hidden class="anchor" aria-hidden="true" href="#7-la-sindrome-della-cache-risoluzione-problemi">#</a></h2>
 <p>Durante la configurazione abbiamo scoperto che <strong>il 90% dei problemi &ldquo;strani&rdquo; è causato dalla cache del browser</strong>. Se modifichi qualcosa (come un&rsquo;icona, un menu o la configurazione di Decap CMS) ma non vedi le modifiche, non è un errore del server: è il tuo browser che si rifiuta di scaricare i file nuovi.</p>
 <h3 id="cosa-fare-quando-le-modifiche-non-appaiono">Cosa fare quando le modifiche non appaiono<a hidden class="anchor" aria-hidden="true" href="#cosa-fare-quando-le-modifiche-non-appaiono">#</a></h3>
 <ol>
-<li><strong>Hard Refresh della pagina</strong>:
+<li>
+<p><strong>Hard Refresh della pagina</strong>:</p>
 <ul>
 <li>Windows/Linux: <code>Ctrl + F5</code></li>
 <li>Mac: <code>Cmd + Shift + R</code></li>
 </ul>
 </li>
-<li><strong>Navigazione in incognito</strong>: Apri il sito in una finestra privata. Se lì funziona, il problema è al 100% la cache.</li>
-<li><strong>Pulire la cache locale di Decap CMS</strong>:
-Se hai modificato il file <code>config.yml</code> (es. per aggiungere campi) ma il pannello <code>/admin/</code> non li mostra:
+<li>
+<p><strong>Navigazione in incognito</strong>: Apri il sito in una finestra privata. Se lì funziona, il problema è al 100% la cache.</p>
+</li>
+<li>
+<p><strong>Pulire la cache locale di Decap CMS</strong>:
+Se hai modificato il file <code>config.yml</code> (es. per aggiungere campi) ma il pannello <code>/admin/</code> non li mostra:</p>
 <ul>
 <li>Apri <code>/admin/</code> e premi <code>F12</code> (Strumenti di sviluppo).</li>
 <li>Vai nella scheda <strong>Application</strong> (o <em>Applicazione</em>).</li>
@@ -357,10 +371,13 @@ Se hai modificato il file <code>config.yml</code> (es. per aggiungere campi) ma 
 <p>A differenza degli articoli che scrivi dal pannello, i file di configurazione (come <code>hugo.toml</code> o <code>static/admin/config.yml</code>) <strong>non si aggiornano da soli</strong>. Se devi fare modifiche strutturali (es. aggiungere una nuova voce al menu, cambiare i campi del CMS, modificare il titolo del sito), devi seguire questi passaggi dal terminale del server.</p>
 <h3 id="procedura-standard-di-aggiornamento">Procedura Standard di Aggiornamento<a hidden class="anchor" aria-hidden="true" href="#procedura-standard-di-aggiornamento">#</a></h3>
 <ol>
-<li><strong>Modifica i file</strong>:
-Apri i file che devi modificare con l&rsquo;editor di testo (es. <code>nano /opt/web/mysite/hugo.toml</code> o <code>nano /opt/web/mysite/static/admin/config.yml</code>).</li>
-<li><strong>Rigenera il sito e invia le modifiche a GitHub</strong>:
-Esegui i seguenti comandi per compilare il sito e salvare le modifiche nel repository:
+<li>
+<p><strong>Modifica i file</strong>:
+Apri i file che devi modificare con l&rsquo;editor di testo (es. <code>nano /opt/web/mysite/hugo.toml</code> o <code>nano /opt/web/mysite/static/admin/config.yml</code>).</p>
+</li>
+<li>
+<p><strong>Rigenera il sito e invia le modifiche a GitHub</strong>:
+Esegui i seguenti comandi per compilare il sito e salvare le modifiche nel repository:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /opt/web/mysite
 </span></span><span style="display:flex;"><span>hugo
 </span></span><span style="display:flex;"><span>git add static/admin/config.yml hugo.toml
@@ -381,7 +398,106 @@ Se Git si blocca per questo motivo e vuoi mantenere le modifiche fatte da GitHub
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout -- nome_del_file.md
 </span></span><span style="display:flex;"><span>git pull
 </span></span><span style="display:flex;"><span>hugo
-</span></span></code></pre></div>
+</span></span></code></pre></div><hr>
+<h2 id="9-upload-automatico-di-pdf-e-pulizia-file">9. Upload Automatico di PDF e Pulizia File<a hidden class="anchor" aria-hidden="true" href="#9-upload-automatico-di-pdf-e-pulizia-file">#</a></h2>
+<p>Per gestire i PDF mensili (es. il menu) senza usare il CMS, è stato creato un sistema di upload autonomo accessibile da browser.</p>
+<h3 id="come-funziona">Come funziona<a hidden class="anchor" aria-hidden="true" href="#come-funziona">#</a></h3>
+<ol>
+<li>Vai su <code>https://nginx-pa.duckdns.org/carica-pdf</code>.</li>
+<li>Seleziona un file PDF dal tuo computer e clicca su <strong>Carica</strong>.</li>
+<li>Il file verrà automaticamente rinominato in <strong><code>menu-mese.pdf</code></strong> e salvato in <code>/opt/web/mysite/static/uploads/</code>.</li>
+<li>Lo script eseguirà in automatico:
+<ul>
+<li><code>git pull</code> (per allinearsi a GitHub).</li>
+<li><code>hugo</code> (per rigenerare il sito).</li>
+<li><code>git add -A</code> (per includere tutte le modifiche).</li>
+<li><code>git commit</code> e <code>git push</code> (per inviare tutto su GitHub).</li>
+</ul>
+</li>
+<li>Il file sarà subito disponibile al link: <code>https://nginx-pa.duckdns.org/uploads/menu-mese.pdf</code>.</li>
+</ol>
+<h3 id="pulizia-automatica">Pulizia automatica<a hidden class="anchor" aria-hidden="true" href="#pulizia-automatica">#</a></h3>
+<p>Ogni volta che carichi un nuovo PDF, lo script controlla la cartella <code>static/uploads/</code> e <strong>cancella i file più vecchi di 90 giorni</strong> (escluso <code>menu-mese.pdf</code>), per evitare che il repository diventi troppo pesante.</p>
+<h3 id="link-nel-sito">Link nel sito<a hidden class="anchor" aria-hidden="true" href="#link-nel-sito">#</a></h3>
+<p>Per aprire il PDF in una nuova finestra, inserisci nel Body del post:
+<a href="/uploads/menu-mese.pdf" target="_blank">Apri il Menu del Mese</a></p>
+<p><em>(Ricorda di abilitare <code>unsafe = true</code> in <code>hugo.toml</code> per permettere l&rsquo;HTML nel Markdown).</em></p>
+<h3 id="configurazione-nginx-importante">Configurazione Nginx (Importante)<a hidden class="anchor" aria-hidden="true" href="#configurazione-nginx-importante">#</a></h3>
+<p>Affinché l&rsquo;upload funzioni, il file <code>/etc/nginx/sites-available/miosito</code> deve contenere questa <code>location</code>, con lo <strong>slash finale</strong> in <code>proxy_pass</code>:</p>
+<pre><code>location ^~ /carica-pdf {
+    proxy_pass http://127.0.0.1:5000/;  # Lo slash finale è fondamentale!
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    client_max_body_size 50M;
+}
+</code></pre>
+<hr>
+<h2 id="10-risoluzione-dei-conflitti-tra-nginx-e-npm">10. Risoluzione dei Conflitti tra Nginx e NPM<a hidden class="anchor" aria-hidden="true" href="#10-risoluzione-dei-conflitti-tra-nginx-e-npm">#</a></h2>
+<p>Durante la configurazione, abbiamo scoperto che Nginx può essere molto &ldquo;testardo&rdquo; con le priorità delle regole e con i duplicati.</p>
+<h3 id="il-warning-conflicting-server-name">Il warning &ldquo;conflicting server name&rdquo;<a hidden class="anchor" aria-hidden="true" href="#il-warning-conflicting-server-name">#</a></h3>
+<p>Se Nginx mostra il messaggio: <code>[warn] conflicting server name &quot;nginx-pa.duckdns.org&quot; on 0.0.0.0:80, ignored</code>, significa che ci sono <strong>due blocchi <code>server</code></strong> che provano a gestire lo stesso dominio.</p>
+<p><strong>Soluzione</strong>: Rimuovi il blocco <code>server</code> da <code>/etc/nginx/nginx.conf</code> e lascia la configurazione <strong>solo</strong> nel file <code>/etc/nginx/sites-available/miosito</code>. Dopo la modifica, riavvia con <code>systemctl restart nginx</code> e il warning sparirà.</p>
+<h3 id="npm-attenzione-alle-configurazioni-custom">NPM: attenzione alle configurazioni custom<a hidden class="anchor" aria-hidden="true" href="#npm-attenzione-alle-configurazioni-custom">#</a></h3>
+<p>Se NPM restituisce errori <code>400 Bad Request</code> o <code>401 Unauthorized</code>, spesso è colpa di configurazioni duplicate nella sezione &ldquo;Custom Locations&rdquo;. NPM aggiunge già i suoi header, quindi non reinserirli manualmente. Se hai dubbi, svuota quella sezione e lascia solo i campi base.</p>
+<hr>
+<h2 id="11-riepilogo-dei-servizi-attivi">11. Riepilogo dei Servizi Attivi<a hidden class="anchor" aria-hidden="true" href="#11-riepilogo-dei-servizi-attivi">#</a></h2>
+<table>
+	<thead>
+			<tr>
+					<th style="text-align: left">Servizio</th>
+					<th style="text-align: left">Comando di stato</th>
+					<th style="text-align: left">Porta</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: left">Nginx</td>
+					<td style="text-align: left"><code>systemctl status nginx</code></td>
+					<td style="text-align: left">80</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Docker (OAuth Decap)</td>
+					<td style="text-align: left"><code>docker ps</code></td>
+					<td style="text-align: left">9000</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">GitHub Webhook</td>
+					<td style="text-align: left"><code>systemctl status github-webhook</code></td>
+					<td style="text-align: left">9999</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Uploader PDF</td>
+					<td style="text-align: left"><code>systemctl status uploader</code></td>
+					<td style="text-align: left">5000</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="12-allineamento-manuale-e-risoluzione-conflitti-git">12. Allineamento Manuale e Risoluzione Conflitti Git<a hidden class="anchor" aria-hidden="true" href="#12-allineamento-manuale-e-risoluzione-conflitti-git">#</a></h2>
+<p>A volte, modificando file da terminale o usando l&rsquo;uploader mentre il CMS è in uso, Git può bloccare le operazioni con errori di &ldquo;conflitto&rdquo;. Ecco come risolvere.</p>
+<h3 id="errore-your-local-changes-would-be-overwritten">Errore: &ldquo;Your local changes would be overwritten&rdquo;<a hidden class="anchor" aria-hidden="true" href="#errore-your-local-changes-would-be-overwritten">#</a></h3>
+<p>Succede quando modifichi un file (es. <code>manuale.md</code>) sul server e poi provi a fare <code>git pull</code>, ma su GitHub c&rsquo;è una versione diversa di quel file.
+<strong>Soluzione</strong>: Scarta le modifiche locali di quel file e allineati a GitHub:
+git checkout &ndash; content/manuale.md
+git pull
+hugo</p>
+<h3 id="errore-non-fast-forward-o-divergent-branches">Errore: &ldquo;non-fast-forward&rdquo; o &ldquo;divergent branches&rdquo;<a hidden class="anchor" aria-hidden="true" href="#errore-non-fast-forward-o-divergent-branches">#</a></h3>
+<p>Succede quando il server ha commit locali non ancora pushati, e GitHub ha altri commit fatti dal CMS.
+<strong>Soluzione</strong>: Esegui il pull con la strategia di merge per unire le due storie:
+git config pull.rebase false
+git pull
+# Se si apre l&rsquo;editor, salva (Ctrl+O, Invio, Ctrl+X)
+git push</p>
+<h3 id="errore-nothing-to-commit-durante-lupload">Errore: &ldquo;nothing to commit&rdquo; durante l&rsquo;upload<a hidden class="anchor" aria-hidden="true" href="#errore-nothing-to-commit-durante-lupload">#</a></h3>
+<p>Se carichi un PDF identico a uno già presente, Git non ha nulla da salvare.
+<strong>Soluzione</strong>: È normale. Il sistema mostra il messaggio &ldquo;File caricato, ma nessuna modifica da salvare&rdquo;. Il file è già aggiornato.</p>
+<h3 id="riallineamento-totale-la-procedura-di-emergenza">Riallineamento totale (La procedura di emergenza)<a hidden class="anchor" aria-hidden="true" href="#riallineamento-totale-la-procedura-di-emergenza">#</a></h3>
+<p>Se il repository locale è completamente incasinato e vuoi riportare il server esattamente a com&rsquo;è su GitHub, esegui:
+git fetch origin
+git reset &ndash;hard origin/main
+hugo
+<em>(Attenzione: questo cancella tutte le modifiche locali non pushate).</em></p>
+
 
   </div>
 

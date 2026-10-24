@@ -28,11 +28,11 @@ enableRobotsTXT = true
   imageWidth = 600
   
   [[params.profileMode.buttons]]
-    name = "Vai all'Archivio"
+    name = "Categorie"
     url = "/categories/"
-[[params.socialIcons]]
-  name = "github"
-  url = "https://github.com/"
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/"
 
 [menu]
   [[menu.main]]

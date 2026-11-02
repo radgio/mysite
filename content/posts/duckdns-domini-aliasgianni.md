@@ -9,6 +9,4 @@ categories:
 tags:
   - duckdns
 ---
-
-
-![](/images/aliasgianni.png)
+![aliasgianni@gmail.com](/images/aliasgianni.png)
